@@ -1,0 +1,8 @@
+.adminPage { background: #f6f6f6; min-height: 80vh; padding: 30px; }
+.adminPage h1 { margin-bottom: 20px; }
+.adminForm { background: #fff; padding: 20px; border-radius: 8px; max-width: 720px; }
+.adminForm label { display: block; margin-top: 12px; font-weight: bold; }
+.adminForm input[type="text"], .adminForm input[type="number"], .adminForm select, .adminForm textarea { width: 100%; padding: 8px; margin-top: 6px; }
+.adminForm textarea { min-height: 100px; }
+.adminForm .preview { max-width: 200px; margin-top: 12px; border-radius: 6px; }
+.saveBtn { margin-top: 16px; padding: 10px 16px; background: #ffd814; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
