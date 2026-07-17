@@ -1,0 +1,22 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+venv/
+.env
+.venv/
+
+# Ignore local DB and media (persisted via volumes)
+*.sqlite3
+media/
+
+# Node and frontend build (we build frontend separately)
+frontend/node_modules/
+frontend/dist/
+
+# Git
+.git
+
