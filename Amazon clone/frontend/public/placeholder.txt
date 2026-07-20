@@ -1,0 +1,3 @@
+Placeholder: replace with real image if desired.
+
+(This repository environment cannot create binary PNG easily; please replace this file with an actual image named placeholder.png in public/ if you want a real image to be uploaded.)
