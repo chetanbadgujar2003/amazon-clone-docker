@@ -43,8 +43,6 @@ services:
       retries: 5
     networks:
       - app-network
-    profiles:
-      - mongodb  # Only starts if explicitly requested with: docker compose --profile mongodb up
 
   # Redis Cache (for session and caching)
   redis:
@@ -73,37 +71,21 @@ services:
     container_name: amazon_clone_backend
     restart: unless-stopped
     environment:
-      DEBUG: ${DEBUG:-False}
+      DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this-in-production}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
-      
-      # Database configuration - choose one based on your needs
-      # For PostgreSQL (recommended for production)
-      DATABASE_ENGINE: ${DATABASE_ENGINE:-django.db.backends.postgresql}
-      DATABASE_NAME: ${POSTGRES_DB:-amazon_clone}
-      DATABASE_USER: ${POSTGRES_USER:-postgres}
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      DATABASE_HOST: ${DATABASE_HOST:-postgres}
-      DATABASE_PORT: ${DATABASE_PORT:-5432}
-      
-      # Alternative: MongoDB configuration (if using MONGODB_URI)
-      # MONGODB_URI: ${MONGODB_URI:-}
-      # MONGODB_NAME: ${MONGO_DB:-amazon_clone}
-      
-      # Redis configuration
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,frontend}
+      DATABASE_ENGINE: ${DATABASE_ENGINE:-django.db.backends.sqlite3}
+      MONGODB_URI: ${MONGODB_URI:-mongodb://root:example@mongo:27017/amazon_clone?authSource=admin}
+      MONGODB_NAME: ${MONGO_DB:-amazon_clone}
       REDIS_URL: ${REDIS_URL:-redis://:redis_password@redis:6379/0}
-      
-      # CORS configuration
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://frontend:3000}
-      
-      # Email configuration (optional)
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000}
       EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
       EMAIL_HOST: ${EMAIL_HOST:-}
       EMAIL_PORT: ${EMAIL_PORT:-587}
       EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
     depends_on:
-      postgres:
+      mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -115,7 +97,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/", "-H", "Accept: application/json"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/', timeout=5)"]
       interval: 30s
       timeout: 10s
       start_period: 40s

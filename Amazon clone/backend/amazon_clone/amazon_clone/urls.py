@@ -5,14 +5,17 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.conf import settings
 from django.conf.urls.static import static
 
+from .mongo_utils import get_mongo_status
+
 
 def health(request):
-    return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'ok', 'service': 'backend', 'mongo': get_mongo_status()})
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('health/', health),
+    path('health/', health, name='health'),
+    path('api/health/', health, name='api-health'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/auth/', include('auth_app.urls')),
